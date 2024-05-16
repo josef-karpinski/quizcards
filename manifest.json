@@ -1,0 +1,32 @@
+{	
+	"name": "QuizCards",
+	"version": "0.0.0.1",
+	"description": "Convert Quizlet flashcards into printable PDF files. Very useful for students who prefer physical flashcards rather than online ones.",
+	"permissions": ["tabs"],
+	"host_permissions": ["https://*.quizlet.com/*"],
+	"background" : {
+		"service_worker": "background.js"
+	},
+	"content_scripts":[
+	  {
+		"matches": ["https://*.quizlet.com/*"],
+		"js": ["contentScript.js"]
+	  }
+	],
+	"icons": { 
+		"16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png" 
+	},
+	"action":{
+		"default_icon":{
+			"16": "images/icon16.png",
+			"48": "images/icon48.png",
+			"128": "images/icon128.png"
+		},
+		"default_title": "QuizCards",
+		"default_popup": "popup.html"
+	},
+	"content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'",
+	"manifest_version": 3
+}
