@@ -36,8 +36,9 @@ async function createPdf(flashcardTerms, termRows, termCols) {
     // Create a new PDFDocument
     const pdfDoc = await PDFDocument.create()
 
-    // Embed the Times Roman font
-    const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+    // Embed fonts for the terms and definitions
+    const termEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierBoldOblique);
+    const defEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierOblique);
 
     // Initialize variables for term boxes
     //const termRows = 5;
@@ -60,7 +61,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
         x: 50,
         y: height - 4 * fontSize,
         size: fontSize,
-        font: timesRomanFont,
+        font: termEmbeddedFont,
         color: rgb(0, 0.53, 0.71),
     });
 
@@ -98,7 +99,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
                     let termText = flashcardTerms[i + r * termCols + c][0];
                     let minX = c * widthPerTerm;
                     let maxX = (c + 1) * widthPerTerm;
-                    dyanmicTextBox(frontPage, termText, timesRomanFont, minX+10, maxX-10, minY+10, maxY-10);
+                    dynamicTextBox(frontPage, termText, termEmbeddedFont, minX+10, maxX-10, minY+10, maxY-10);
                 }
             }
 
@@ -108,7 +109,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
                     let defText = flashcardTerms[i + r * termCols + (termCols - 1 - c)][1];
                     let minX = c * widthPerTerm;
                     let maxX = (c + 1) * widthPerTerm;
-                    dyanmicTextBox(backPage, defText, timesRomanFont, minX+10, maxX-10, minY+10, maxY-10);
+                    dynamicTextBox(backPage, defText, defEmbeddedFont, minX+10, maxX-10, minY+10, maxY-10);
                 }
             }
         }
@@ -123,7 +124,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
     download(pdfBytes, "quizcards.pdf", "application/pdf");
 }
 
-function dyanmicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){
+function dynamicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){
     const boxWidth = maxX - minX;
     const boxHeight = maxY - minY;
 
@@ -140,7 +141,19 @@ function dyanmicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){
 
         const textSplit = splitTextAtWidth(text, embeddedFont, fontSize, boxWidth);
 
-        if (textSplit.length < maxLines){
+        const reqLines = Math.ceil(textWidth / boxWidth);
+
+        if (textSplit.length < maxLines && reqLines < maxLines){
+            let contBool = false;
+            for(let line = 0; line < textSplit.length; line++){
+                if (embeddedFont.widthOfTextAtSize(textSplit[line], fontSize) > boxWidth){
+                    contBool = true;
+                    break;
+                }
+            }
+            if (contBool){
+                continue;
+            }
             // Calculate the starting y position to center the text block vertically
             let y = maxY - (boxHeight/(textSplit.length+1)) - fontHeight/2;
 
@@ -148,7 +161,8 @@ function dyanmicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){
                 const lineWidth = embeddedFont.widthOfTextAtSize(line, fontSize);
                 const x = xCenter - lineWidth / 2;
                 page.drawText(line, { x, y, size: fontSize, font: embeddedFont });
-                y -= fontHeight;
+                
+                y -= (fontHeight + fontHeight * 0.1);
             });
             break;
         }
