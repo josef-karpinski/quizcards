@@ -13,7 +13,6 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
                 if (flashcardTerms.length > 0){
                     // Add PDF functionality and download functionality
                     createPdf(flashcardTerms, 5, 2);
-                    alert(flashcardTerms[0])
                 }
                 else{
                     alert("We did not find terms on this page, please make sure you are on a valid quizlet flashcard set webpage.")
@@ -34,7 +33,7 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
 
 async function createPdf(flashcardTerms, termRows, termCols) {
     // Create a new PDFDocument
-    const pdfDoc = await PDFDocument.create()
+    const pdfDoc = await PDFDocument.create();
 
     // Embed fonts for the terms and definitions
     const termEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierBoldOblique);
@@ -46,8 +45,8 @@ async function createPdf(flashcardTerms, termRows, termCols) {
     const termsPerPage = termRows * termCols;
 
     // Add a blank page to the document
-    const instrPage = pdfDoc.addPage()
-    pdfDoc.addPage() // Add another Page for double sided
+    const instrPage = pdfDoc.addPage();
+    pdfDoc.addPage(); // Add another Page for double sided
 
     // Get the width and height of the page
     const { width, height } = instrPage.getSize()

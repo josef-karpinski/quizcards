@@ -1,7 +1,7 @@
 {	
-	"name": "QuizCards",
-	"version": "0.0.0.1",
-	"description": "Convert Quizlet flashcards into printable PDF files. Very useful for students who prefer physical flashcards rather than online ones.",
+	"name": "QuizCards - Quizlet Flashcard Printer",
+	"version": "1.0.0",
+	"description": "Turn your Quizlet sets into printable PDFs for physical flashcards. No more writing, just studying!",
 	"permissions": ["tabs"],
 	"host_permissions": ["https://*.quizlet.com/*"],
 	"background" : {
