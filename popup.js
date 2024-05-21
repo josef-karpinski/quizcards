@@ -11,24 +11,19 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
             .then((resp) => {
                 flashcardTerms = resp;
                 if (flashcardTerms.length > 0){
-                    // Add PDF functionality and download functionality
                     createPdf(flashcardTerms, 5, 2);
                 }
                 else{
-                    alert("We did not find terms on this page, please make sure you are on a valid quizlet flashcard set webpage.")
+                    alert("We did not find terms on this page.\nPlease make sure you are on a valid quizlet flashcard set webpage.")
                 }
             })
             .catch(error => {
-                alert("Error fetching terms from Quizlet, please reload the webpage and try again.");
-            });
-
-        
-        
+                alert("There was an error fetching terms from Quizlet.\nPlease reload the webpage and try again.");
+            });    
     }
     else{
-        alert("This is not a quizlet domain website.");
+        alert("This is not a Quizlet website.");
     }
-    
 });
 
 async function createPdf(flashcardTerms, termRows, termCols) {
@@ -36,7 +31,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
     const pdfDoc = await PDFDocument.create();
 
     // Embed fonts for the terms and definitions
-    const termEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierBoldOblique);
+    const termEmbeddedFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
     const defEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierOblique);
 
     // Initialize variables for term boxes
