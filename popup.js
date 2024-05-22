@@ -11,7 +11,11 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
             .then((resp) => {
                 flashcardTerms = resp;
                 if (flashcardTerms.length > 0){
-                    createPdf(flashcardTerms, 5, 2);
+                    let numCols = document.getElementById("num-cols").value;
+                    let numRows = document.getElementById("num-rows").value;
+                    let termFont = document.getElementById("term-font").value;
+                    let definitionFont = document.getElementById("definition-font").value;
+                    createPdf(flashcardTerms, numRows, numCols, termFont, definitionFont);
                 }
                 else{
                     alert("We did not find terms on this page.\nPlease make sure you are on a valid quizlet flashcard set webpage.")
@@ -26,13 +30,15 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
     }
 });
 
-async function createPdf(flashcardTerms, termRows, termCols) {
+//////////////////////////
+//PDF Creation Functions
+async function createPdf(flashcardTerms, termRows, termCols, termFont, definitionFont) {
     // Create a new PDFDocument
     const pdfDoc = await PDFDocument.create();
 
     // Embed fonts for the terms and definitions
-    const termEmbeddedFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-    const defEmbeddedFont = await pdfDoc.embedFont(StandardFonts.CourierOblique);
+    const termEmbeddedFont = await embedFontFromSettings(pdfDoc, termFont);
+    const defEmbeddedFont = await embedFontFromSettings(pdfDoc, definitionFont);
 
     // Initialize variables for term boxes
     //const termRows = 5;
@@ -44,7 +50,7 @@ async function createPdf(flashcardTerms, termRows, termCols) {
     pdfDoc.addPage(); // Add another Page for double sided
 
     // Get the width and height of the page
-    const { width, height } = instrPage.getSize()
+    const { width, height } = instrPage.getSize();
 
     const heightPerTerm = height / termRows;
     const widthPerTerm = width / termCols;
@@ -160,13 +166,7 @@ function dynamicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){
             });
             break;
         }
-
-
-
-
     }
-
-
 }
 
 function splitTextAtWidth(text, embeddedFont, fontSize, maxWidth) {
@@ -212,4 +212,104 @@ function drawDashedLine(page, startX, startY, endX, endY, segmentLength) {
             color: rgb(0, 0, 0),
         });
     }
+}
+
+async function embedFontFromSettings(doc, fontToEmbed){
+    let embeddedFont;
+    switch (fontToEmbed) {
+        case "Courier":
+            embeddedFont = await doc.embedFont(StandardFonts.Courier);
+            break;
+        case "CourierBold":
+            embeddedFont = await doc.embedFont(StandardFonts.CourierBold);
+            break;
+        case "CourierOblique":
+            embeddedFont = await doc.embedFont(StandardFonts.CourierOblique);
+            break;
+        case "CourierBoldOblique":
+            embeddedFont = await doc.embedFont(StandardFonts.CourierBoldOblique);
+            break;
+        case "Helvetica":
+            embeddedFont = await doc.embedFont(StandardFonts.Helvetica);
+            break;
+        case "HelveticaBold":
+            embeddedFont = await doc.embedFont(StandardFonts.HelveticaBold);
+            break;
+        case "HelveticaOblique":
+            embeddedFont = await doc.embedFont(StandardFonts.HelveticaOblique);
+            break;
+        case "HelveticaBoldOblique":
+            embeddedFont = await doc.embedFont(StandardFonts.HelveticaBoldOblique);
+            break;
+        case "TimesRoman":
+            embeddedFont = await doc.embedFont(StandardFonts.TimesRoman);
+            break;
+        case "TimesRomanBold":
+            embeddedFont = await doc.embedFont(StandardFonts.TimesRomanBold);
+            break;
+        case "TimesRomanItalic":
+            embeddedFont = await doc.embedFont(StandardFonts.TimesRomanItalic);
+            break;
+        case "TimesRomanBoldItalic":
+            embeddedFont = await doc.embedFont(StandardFonts.TimesRomanBoldItalic);
+            break;
+        default:
+            embeddedFont = await doc.embedFont(StandardFonts.Courier);
+    }
+    return embeddedFont;
+}
+//End of PDF Creation Functions
+//////////////////////////
+
+
+// Load settings from storage
+document.addEventListener("DOMContentLoaded", async (e) => {
+    let savedSettings = await chrome.storage.sync.get("settings");
+    if (savedSettings.settings === undefined){
+        await setDefaultSettings();
+    }
+    savedSettings = await chrome.storage.sync.get("settings");
+    document.getElementById('num-rows').value = savedSettings.settings["numRows"];
+    document.getElementById('num-cols').value = savedSettings.settings["numCols"];
+    document.getElementById('term-font').value = savedSettings.settings["termFont"];
+    document.getElementById('definition-font').value = savedSettings.settings["definitionFont"];
+});
+
+// Save settings button
+document.getElementById("settings-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); // prevents default action (for DOMContentLoaded)
+
+    let settings = {
+        "numRows": document.getElementById("num-rows").value,
+        "numCols": document.getElementById("num-cols").value,
+        "termFont": document.getElementById("term-font").value,
+        "definitionFont": document.getElementById("definition-font").value,
+    }
+    // TODO: Data validation
+    //
+    await chrome.storage.sync.set({"settings": settings});
+});
+
+// Reset settings button
+document.getElementById("reset-settings-button").addEventListener("click", async (e) => {
+    e.preventDefault(); // prevents default action (for DOMContentLoaded)
+
+    await setDefaultSettings();
+    const savedSettings = await chrome.storage.sync.get("settings");
+    document.getElementById('num-rows').value = savedSettings.settings["numRows"];
+    document.getElementById('num-cols').value = savedSettings.settings["numCols"];
+    document.getElementById('term-font').value = savedSettings.settings["termFont"];
+    document.getElementById('definition-font').value = savedSettings.settings["definitionFont"];
+});
+
+
+
+async function setDefaultSettings(){
+    const settings = {
+        "numRows": 5,
+        "numCols": 2,
+        "termFont": "CourierBoldOblique",
+        "definitionFont": "CourierOblique",
+    };
+    await chrome.storage.sync.set({"settings": settings});
 }
