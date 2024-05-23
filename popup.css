@@ -1,0 +1,99 @@
+/* Center the popup content */
+body {
+    width: 300px; /* Adjust width as needed */
+    margin: 20px auto; /* Center horizontally and reduce top/bottom margin */
+    text-align: center;
+    font-family: Arial, sans-serif; /* Default font */
+    background-color: #A4DBE8; /* Light blue background */
+    padding: 20px; /* Add padding to the body */
+    border-radius: 10px; /* Add rounded corners */
+}
+
+/* Style for the settings form */
+#settings-form {
+    margin-bottom: 20px; /* Add some space at the bottom */
+}
+
+/* Style for form fields */
+#settings-form div {
+    display: inline-block; /* Display fields in line */
+    margin-right: 20px; /* Add some space between fields */
+    text-align: left;
+}
+
+/* Style for labels */
+#settings-form label {
+    display: block; /* Make labels block elements */
+}
+
+/* Style for select boxes */
+#settings-form select {
+    width: 200px; /* Set width as needed */
+}
+
+/* Style for buttons */
+button,
+input[type="submit"] {
+    padding: 12px 24px; /* Increase padding */
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px; /* Add rounded corners */
+    border: none;
+    transition: all 0.3s ease;
+    outline: none; /* Remove default outline */
+}
+
+/* Style for the Create PDF button */
+#create-pdf-button {
+    background-color: #1abc9c; /* Turquoise */
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add text shadow */
+    padding: 16px 32px; /* Increase padding */
+    font-size: 20px; /* Increase font size */
+    border-radius: 10px; /* Add rounded corners */
+    border: none;
+    transition: all 0.3s ease;
+    outline: none; /* Remove default outline */
+}
+
+/* Style for the Reset button */
+#reset-settings-button {
+    background-color: #e74c3c; /* Alizarin */
+    color: white;
+}
+
+/* Style for the Save Settings button */
+#save-settings-button {
+    background-color: #3498db; /* Peter River */
+    color: white;
+}
+
+/* Hover effect for buttons */
+button:hover,
+input[type="submit"]:hover {
+    opacity: 0.8; /* Reduce opacity on hover */
+}
+
+fieldset select {
+    background-color: #f2f2f2; /* Light gray background */
+    border: 1px solid #ccc; /* Gray border */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 8px; /* Add padding */
+    width: 200px; /* Set width as needed */
+}
+
+/* Style for input boxes within the fieldset */
+fieldset input[type="number"] {
+    background-color: #f2f2f2; /* Light gray background */
+    border: 1px solid #ccc; /* Gray border */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 8px; /* Add padding */
+}
+
+fieldset {
+    border: 1px solid black; /* Change border width and color */
+    border-radius: 10px; /* Add rounded corners */
+    padding: 20px; /* Add padding */
+}
