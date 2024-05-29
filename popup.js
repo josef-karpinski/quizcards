@@ -5,29 +5,39 @@ const { PDFDocument, StandardFonts, rgb } = PDFLib
 document.getElementById("create-pdf-button").addEventListener("click", async () => {
     const activeTab = await getActiveTabURL();
 
-    if (activeTab.url.includes("quizlet.com")){
-        let flashcardTerms;
-        chrome.tabs.sendMessage(activeTab.id, {type: "GET_FLASHCARDS"})
-            .then((resp) => {
-                flashcardTerms = resp;
-                if (flashcardTerms.length > 0){
-                    let numCols = document.getElementById("num-cols").value;
-                    let numRows = document.getElementById("num-rows").value;
-                    let termFont = document.getElementById("term-font").value;
-                    let definitionFont = document.getElementById("definition-font").value;
-                    createPdf(flashcardTerms, numRows, numCols, termFont, definitionFont);
-                }
-                else{
-                    alert("We did not find terms on this page.\nPlease make sure you are on a valid quizlet flashcard set webpage.")
-                }
-            })
-            .catch(error => {
-                alert("There was an error fetching terms from Quizlet.\nPlease reload the webpage and try again.");
-            });    
-    }
+    if (parseInt(document.getElementById("num-cols").value) > parseInt(document.getElementById("num-cols").max) ||
+        parseInt(document.getElementById("num-rows").value) > parseInt(document.getElementById("num-rows").max) ||
+        parseInt(document.getElementById("num-cols").value) < parseInt(document.getElementById("num-cols").min) ||
+        parseInt(document.getElementById("num-rows").value) < parseInt(document.getElementById("num-rows").min))
+        {
+            alert("Invalid Input.");
+        }
     else{
-        alert("This is not a Quizlet website.");
+        if (activeTab.url.includes("quizlet.com")){
+            let flashcardTerms;
+            chrome.tabs.sendMessage(activeTab.id, {type: "GET_FLASHCARDS"})
+                .then((resp) => {
+                    flashcardTerms = resp;
+                    if (flashcardTerms.length > 0){
+                        let numCols = parseInt(document.getElementById("num-cols").value);
+                        let numRows = parseInt(document.getElementById("num-rows").value);
+                        let termFont = document.getElementById("term-font").value;
+                        let definitionFont = document.getElementById("definition-font").value;
+                        createPdf(flashcardTerms, numRows, numCols, termFont, definitionFont);
+                    }
+                    else{
+                        alert("We did not find terms on this page.\nPlease make sure you are on a valid quizlet flashcard set webpage.")
+                    }
+                })
+                .catch(error => {
+                    alert("There was an error fetching terms from Quizlet.\nPlease reload the webpage and try again.");
+                });    
+        }
+        else{
+            alert("This is not a Quizlet website.");
+        }
     }
+    
 });
 
 //////////////////////////
