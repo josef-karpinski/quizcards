@@ -49,6 +49,8 @@ async function createPdf(flashcardTerms, termRows, termCols, termFont, definitio
     // Embed fonts for the terms and definitions
     const termEmbeddedFont = await embedFontFromSettings(pdfDoc, termFont);
     const defEmbeddedFont = await embedFontFromSettings(pdfDoc, definitionFont);
+    // Fonts for instruction page
+    const courBold = await pdfDoc.embedFont(StandardFonts.CourierBold);
 
     // Initialize variables for term boxes
     //const termRows = 5;
@@ -57,32 +59,49 @@ async function createPdf(flashcardTerms, termRows, termCols, termFont, definitio
 
     // Add a blank page to the document
     const instrPage = pdfDoc.addPage();
-    pdfDoc.addPage(); // Add another Page for double sided
+    const secInstrPage = pdfDoc.addPage(); // Add another Page for double sided
 
     // Get the width and height of the page
     const { width, height } = instrPage.getSize();
 
+    //TODO: Instruction Page
+
+
+    // Instruction Page Title
+    const titleText = "Instructions Page";
+    instrPage.drawText(titleText, {
+        font: courBold,
+        size: 50,
+        x: width/2 - courBold.widthOfTextAtSize(titleText, 50)/2,
+        y: height - 60,
+    });
+    instrPage.drawLine({
+        start: {
+            x: width/2 - courBold.widthOfTextAtSize(titleText, 50)/2,
+            y: height - 85,
+        },
+        end: {
+            x: width/2 + courBold.widthOfTextAtSize(titleText, 50)/2,
+            y: height - 85,
+        },
+        thickness: 1,
+        color: rgb(0,0,0),
+        opacity: 1,
+    });
+
+    // How to Print Section
+
+
+    // Recommended Settings and Trouble Shooting
+
+    
+    // FAQs
+
+
+    //End of Instruction Pages
+
     const heightPerTerm = height / termRows;
     const widthPerTerm = width / termCols;
-
-    // Draw a string of text toward the top of the page
-    const fontSize = 30
-    instrPage.drawText("Intructions Page", {
-        x: 50,
-        y: height - 4 * fontSize,
-        size: fontSize,
-        font: termEmbeddedFont,
-        color: rgb(0, 0.53, 0.71),
-    });
-
-    instrPage.drawLine({
-        start: { x: 0, y: 0 },
-        end: { x: width/2, y: height/2},
-        thickness: 0.5,
-        color: rgb(0, 0, 0),
-        opacity: 0,
-        dashPhase: 10,
-    });
 
     for (let i = 0; i < flashcardTerms.length; i += termsPerPage){
         const frontPage = pdfDoc.addPage();
