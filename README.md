@@ -74,4 +74,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-If you have any questions or feedback, please contact us at [josef.karpinski@uconn.edu]. You can also open an issue on our [GitHub repository](https://github.com/josef-karpinski/quizcards).
+If you have any questions or feedback, please open an issue in the [Issues Section](https://github.com/josef-karpinski/quizcards/issues).
