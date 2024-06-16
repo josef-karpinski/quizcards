@@ -1,4 +1,4 @@
-import {getActiveTabURL} from "./utils.js"
+import {getActiveTabURL} from "../scripts/utils.js"
 const { PDFDocument, StandardFonts, rgb } = PDFLib
 
 
@@ -44,7 +44,7 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
 //PDF Creation Functions
 async function createPdf(flashcardTerms, termRows, termCols, termFont, definitionFont) {
     // Create a new PDFDocument
-    const arrayBuffer = await fetch("instructions_page.pdf").then(res => res.arrayBuffer())
+    const arrayBuffer = await fetch("./../assets/instructions_page.pdf").then(res => res.arrayBuffer())
     const pdfDoc = await PDFDocument.load(arrayBuffer)
 
     // Embed fonts for the terms and definitions
