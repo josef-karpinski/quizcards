@@ -66,7 +66,7 @@ Contributions are welcome! If you have suggestions for new features, feel free t
     ```sh
     git push origin feature-name
     ```
-5. Open a pull request.
+5. Open a [pull request](https://github.com/josef-karpinski/quizcards/pulls).
 
 ## License
 
