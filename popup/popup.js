@@ -14,16 +14,15 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
         }
     else{
         if (activeTab.url.includes("quizlet.com")){
-            let flashcardTerms;
             chrome.tabs.sendMessage(activeTab.id, {type: "GET_FLASHCARDS"})
                 .then((resp) => {
-                    flashcardTerms = resp;
+                    const {flashcardTerms, pageTitle} = resp;
                     if (flashcardTerms.length > 0){
                         let numCols = parseInt(document.getElementById("num-cols").value);
                         let numRows = parseInt(document.getElementById("num-rows").value);
                         let termFont = document.getElementById("term-font").value;
                         let definitionFont = document.getElementById("definition-font").value;
-                        createPdf(flashcardTerms, numRows, numCols, termFont, definitionFont);
+                        createPdf(flashcardTerms, numRows, numCols, termFont, definitionFont, pageTitle);
                     }
                     else{
                         alert("We did not find terms on this page.\nPlease make sure you are on a valid quizlet flashcard set webpage.")
@@ -42,7 +41,7 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
 
 //////////////////////////
 //PDF Creation Functions
-async function createPdf(flashcardTerms, termRows, termCols, termFont, definitionFont) {
+async function createPdf(flashcardTerms, termRows, termCols, termFont, definitionFont, pageTitle) {
     // Create a new PDFDocument
     const arrayBuffer = await fetch("./../assets/instructions_page.pdf").then(res => res.arrayBuffer())
     const pdfDoc = await PDFDocument.load(arrayBuffer)
@@ -107,7 +106,7 @@ async function createPdf(flashcardTerms, termRows, termCols, termFont, definitio
     const pdfBytes = await pdfDoc.save()
 
     // Trigger the browser to download the PDF document
-    download(pdfBytes, "quizcards.pdf", "application/pdf");
+    download(pdfBytes, pageTitle + ".pdf", "application/pdf");
 }
 
 function dynamicTextBox(page, text, embeddedFont, minX, maxX, minY, maxY){

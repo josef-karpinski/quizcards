@@ -3,7 +3,12 @@
         if (obj.type === "GET_FLASHCARDS"){
             let allFlashcards = []
             allFlashcards = getFlashcards();
-            response(allFlashcards);
+            let titleElement = document.getElementsByClassName("tp6mz3n")[0]
+            let title = titleElement ? ("QuizCards - " + titleElement.textContent) : "QuizCards";
+            response({
+                flashcardTerms: allFlashcards, 
+                pageTitle: title
+            });
         }
     })
 })();
