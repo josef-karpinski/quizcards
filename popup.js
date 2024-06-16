@@ -44,61 +44,18 @@ document.getElementById("create-pdf-button").addEventListener("click", async () 
 //PDF Creation Functions
 async function createPdf(flashcardTerms, termRows, termCols, termFont, definitionFont) {
     // Create a new PDFDocument
-    const pdfDoc = await PDFDocument.create();
+    const arrayBuffer = await fetch("instructions_page.pdf").then(res => res.arrayBuffer())
+    const pdfDoc = await PDFDocument.load(arrayBuffer)
 
     // Embed fonts for the terms and definitions
     const termEmbeddedFont = await embedFontFromSettings(pdfDoc, termFont);
     const defEmbeddedFont = await embedFontFromSettings(pdfDoc, definitionFont);
-    // Fonts for instruction page
-    const courBold = await pdfDoc.embedFont(StandardFonts.CourierBold);
 
     // Initialize variables for term boxes
-    //const termRows = 5;
-    //const termCols = 2;
     const termsPerPage = termRows * termCols;
 
-    // Add a blank page to the document
-    const instrPage = pdfDoc.addPage();
-    const secInstrPage = pdfDoc.addPage(); // Add another Page for double sided
-
     // Get the width and height of the page
-    const { width, height } = instrPage.getSize();
-
-    //TODO: Instruction Page
-
-
-    // Instruction Page Title
-    const titleText = "Instructions Page";
-    instrPage.drawText(titleText, {
-        font: courBold,
-        size: 50,
-        x: width/2 - courBold.widthOfTextAtSize(titleText, 50)/2,
-        y: height - 60,
-    });
-    instrPage.drawLine({
-        start: {
-            x: width/2 - courBold.widthOfTextAtSize(titleText, 50)/2,
-            y: height - 85,
-        },
-        end: {
-            x: width/2 + courBold.widthOfTextAtSize(titleText, 50)/2,
-            y: height - 85,
-        },
-        thickness: 1,
-        color: rgb(0,0,0),
-        opacity: 1,
-    });
-
-    // How to Print Section
-
-
-    // Recommended Settings and Trouble Shooting
-
-    
-    // FAQs
-
-
-    //End of Instruction Pages
+    const { width, height } = pdfDoc.getPages()[0].getSize();
 
     const heightPerTerm = height / termRows;
     const widthPerTerm = width / termCols;
@@ -245,6 +202,7 @@ function drawDashedLine(page, startX, startY, endX, endY, segmentLength) {
 
 async function embedFontFromSettings(doc, fontToEmbed){
     let embeddedFont;
+    // These are the only normal fonts available with PDF-Lib
     switch (fontToEmbed) {
         case "Courier":
             embeddedFont = await doc.embedFont(StandardFonts.Courier);
