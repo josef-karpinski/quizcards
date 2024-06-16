@@ -61,8 +61,8 @@ async function createPdf(flashcardTerms, termRows, termCols, termFont, definitio
     const widthPerTerm = width / termCols;
 
     for (let i = 0; i < flashcardTerms.length; i += termsPerPage){
-        const frontPage = pdfDoc.addPage();
-        const backPage = pdfDoc.addPage();
+        const frontPage = pdfDoc.addPage([width, height]);
+        const backPage = pdfDoc.addPage([width, height]);
 
         // Add lines
         for(let c = 1; c < termCols; c++){
