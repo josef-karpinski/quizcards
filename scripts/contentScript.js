@@ -18,7 +18,7 @@ const getFlashcards = () => {
     let result = [];
 
     // Get the DOM objects of all flashcard containers
-    let flashcardContainers = document.getElementsByClassName("SetPageTerms-term");
+    let flashcardContainers = document.getElementsByClassName("SetPageTermsList-term");
     
     // Iterate through each of the flashcard containers
     for (let i = 0; i < flashcardContainers.length; i++){
